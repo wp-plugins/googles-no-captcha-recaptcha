@@ -96,7 +96,7 @@ function display_comment_recaptcha()
 {
 	?>
 		<style>
-			#submit
+			#commentform #submit
 			{
 				display: none;
 			}
@@ -153,7 +153,13 @@ add_action("login_form", "display_login_captcha");
 
 function display_login_captcha()
 {
+    echo '<style type="text/css">
+                    #lostpasswordform, #loginform {
+                    width: 300px !important;
+                    }
+                </style>';
 	?>
+        <br>
 		<div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
 	<?php
 }
@@ -193,7 +199,13 @@ add_action("register_form", "display_register_captcha");
 
 function display_register_captcha()
 {
+        echo '<style type="text/css">
+                    #registerform {
+                    width: 300px !important;
+                    }
+                </style>';
 	?>
+        <br>
 		<div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
 	<?php
 }
