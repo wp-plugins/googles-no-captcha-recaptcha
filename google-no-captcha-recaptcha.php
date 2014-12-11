@@ -110,25 +110,33 @@ add_filter("preprocess_comment", "verify_comment_captcha");
 
 function verify_comment_captcha($commentdata)
 {
-	if(isset($_POST['g-recaptcha-response']))
+    if(defined('XMLRPC_REQUEST')) 
+    { 
+        // don't verify captcha at XMLRPC_REQUESTS
+        return $commentdata;
+    } 
+    else 
     {
-    	$recaptcha_secret = get_option('captcha_secret_key');
-    	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
-    	$response = json_decode($response, true);
-    	if($response["success"] == true)
-    	{
-    		return $commentdata;
-    	}
-    	else
-    	{
-    		echo __("Bots are not allowed to submit comments.");
-    		return null;
-    	}
-    }
-    else
-    {
-    	echo __("Bots are not allowed to submit comments. If you are not a bot then please enable JavaScript in browser.");
-    	return null;
+        if(isset($_POST['g-recaptcha-response']))
+        {
+            $recaptcha_secret = get_option('captcha_secret_key');
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
+            $response = json_decode($response, true);
+            if($response["success"] == true)
+            {
+                return $commentdata;
+            }
+            else
+            {
+                echo __("Bots are not allowed to submit comments.");
+                return null;
+            }
+        }
+        else
+        {
+            echo __("Bots are not allowed to submit comments. If you are not a bot then please enable JavaScript in browser.");
+            return null;
+        }
     }
 }
 
@@ -154,23 +162,30 @@ add_filter("wp_authenticate_user", "verify_login_captcha", 10, 2);
 
 function verify_login_captcha($user, $password)
 {
-	if(isset($_POST['g-recaptcha-response']))
+    if(defined('XMLRPC_REQUEST')) 
     {
-    	$recaptcha_secret = get_option('captcha_secret_key');
-    	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
-    	$response = json_decode($response, true);
-    	if($response["success"] == true)
-    	{
-    		return $user;
-    	}
-    	else
-    	{
-    		return new WP_Error("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot"));
-    	}
-    }
-    else
+        return $user;
+    } 
+    else 
     {
-    	return new WP_Error("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
+        if(isset($_POST['g-recaptcha-response']))
+        {
+            $recaptcha_secret = get_option('captcha_secret_key');
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
+            $response = json_decode($response, true);
+            if($response["success"] == true)
+            {
+                return $user;
+            }
+            else
+            {
+                return new WP_Error("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot"));
+            }
+        }
+        else
+        {
+            return new WP_Error("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
+        }
     }	
 }
 
@@ -187,24 +202,34 @@ add_filter("registration_errors", "verify_registration_captcha", 10, 3);
 
 function verify_registration_captcha($errors, $sanitized_user_login, $user_email)
 {
-	if(isset($_POST['g-recaptcha-response']))
+    if ( defined('XMLRPC_REQUEST') ) 
+    { 
+        // don't verify captcha at XMLRPC_REQUESTS
+        return $errors;
+    } 
+    else 
     {
-    	$recaptcha_secret = get_option('captcha_secret_key');
-    	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
-    	$response = json_decode($response, true);
-    	if($response["success"] == true)
-    	{
-    		return $errors;
-    	}
-    	else
-    	{
-    		$errors->add("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot"));
-    	}
+            // do your code here
+        if(isset($_POST['g-recaptcha-response']))
+        {
+            $recaptcha_secret = get_option('captcha_secret_key');
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
+            $response = json_decode($response, true);
+            if($response["success"] == true)
+            {
+                return $errors;
+            }
+            else
+            {
+                $errors->add("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot"));
+            }
+        }
+        else
+        {
+            $errors->add("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
+        }
     }
-    else
-    {
-    	$errors->add("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
-    }	
+		
 
     return $errors;
 }
@@ -214,24 +239,32 @@ add_action("lostpassword_post", "verify_lostpassword_captcha");
 
 function verify_lostpassword_captcha()
 {
-	if(isset($_POST['g-recaptcha-response']))
+    if ( defined('XMLRPC_REQUEST') ) 
     {
-    	$recaptcha_secret = get_option('captcha_secret_key');
-    	$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
-    	$response = json_decode($response, true);
-    	if($response["success"] == true)
-    	{
-    		return;
-    	}
-    	else
-    	{
-    		wp_die(__("<strong>ERROR</strong>: You are a bot"));
-    	}
-    }
-    else
+        return;
+    } 
+    else 
     {
-    	wp_die(__("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
+            // do your code here
+        if(isset($_POST['g-recaptcha-response']))
+        {
+            $recaptcha_secret = get_option('captcha_secret_key');
+            $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
+            $response = json_decode($response, true);
+            if($response["success"] == true)
+            {
+                return;
+            }
+            else
+            {
+                wp_die(__("<strong>ERROR</strong>: You are a bot"));
+            }
+        }
+        else
+        {
+            wp_die(__("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
+        }
     }	
 
-    return $errors;	
+    return;	
 }
