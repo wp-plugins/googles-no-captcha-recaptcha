@@ -86,24 +86,24 @@ add_action("wp_enqueue_scripts", "frontend_recaptcha_script");
 
 function frontend_recaptcha_script()
 {
-	wp_register_script("recaptcha", "https://www.google.com/recaptcha/api.js");
-   	wp_enqueue_script("recaptcha");
+    wp_register_script("recaptcha", "https://www.google.com/recaptcha/api.js");
+    wp_enqueue_script("recaptcha");
 }
 
 add_action("comment_form", "display_comment_recaptcha");
 
 function display_comment_recaptcha()
 {
-	?>
-		<style>
-			#commentform #submit
-			{
-				display: none;
-			}
-		</style>
-		<div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
-		<input name="submit" type="submit" value="Submit Comment">
-	<?php
+    ?>
+        <style>
+            #commentform #submit
+            {
+                display: none;
+            }
+        </style>
+        <div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
+        <input name="submit" type="submit" value="Submit Comment">
+    <?php
 }
 
 add_filter("preprocess_comment", "verify_comment_captcha");
@@ -145,23 +145,19 @@ add_action("login_enqueue_scripts", "login_recaptcha_script");
 
 function login_recaptcha_script()
 {
-	wp_register_script("recaptcha_login", "https://www.google.com/recaptcha/api.js");
-   	wp_enqueue_script("recaptcha_login");
+    wp_register_script("recaptcha_login", "https://www.google.com/recaptcha/api.js");
+    wp_enqueue_script("recaptcha_login");
 }
 
 add_action("login_form", "display_login_captcha");
 
 function display_login_captcha()
 {
-    echo '<style type="text/css">
-                    #lostpasswordform, #loginform {
-                    width: 300px !important;
-                    }
-                </style>';
-	?>
+
+    ?>
+        <div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
         <br>
-		<div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
-	<?php
+    <?php
 }
 
 add_filter("wp_authenticate_user", "verify_login_captcha", 10, 2);
@@ -192,22 +188,19 @@ function verify_login_captcha($user, $password)
         {
             return new WP_Error("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
         }
-    }	
+    }   
 }
 
 add_action("register_form", "display_register_captcha");
 
 function display_register_captcha()
 {
-        echo '<style type="text/css">
-                    #registerform {
-                    width: 300px !important;
-                    }
-                </style>';
-	?>
+     
+    ?>
+        
+        <div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
         <br>
-		<div class="g-recaptcha" data-sitekey="<?php echo get_option('captcha_site_key'); ?>"></div>
-	<?php
+    <?php
 }
 
 add_filter("registration_errors", "verify_registration_captcha", 10, 3);
@@ -241,7 +234,7 @@ function verify_registration_captcha($errors, $sanitized_user_login, $user_email
             $errors->add("Captcha Invalid", __("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
         }
     }
-		
+        
 
     return $errors;
 }
@@ -276,7 +269,7 @@ function verify_lostpassword_captcha()
         {
             wp_die(__("<strong>ERROR</strong>: You are a bot. If not then enable JavaScript"));
         }
-    }	
+    }   
 
-    return;	
+    return; 
 }
