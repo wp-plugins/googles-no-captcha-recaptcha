@@ -122,7 +122,7 @@ function verify_comment_captcha($commentdata)
             $recaptcha_secret = get_option('captcha_secret_key');
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
             $response = json_decode($response, true);
-            if($response->success == true)
+            if($response["success"] == true)
             {
                 return $commentdata;
             }
@@ -175,7 +175,7 @@ function verify_login_captcha($user, $password)
             $recaptcha_secret = get_option('captcha_secret_key');
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
             $response = json_decode($response, true);
-            if($response->success == true)
+            if($response["success"] == true)
             {
                 return $user;
             }
@@ -220,7 +220,7 @@ function verify_registration_captcha($errors, $sanitized_user_login, $user_email
             $recaptcha_secret = get_option('captcha_secret_key');
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
             $response = json_decode($response, true);
-            if($response->success == true)
+            if($response["success"] == true)
             {
                 return $errors;
             }
@@ -256,7 +256,7 @@ function verify_lostpassword_captcha()
             $recaptcha_secret = get_option('captcha_secret_key');
             $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$recaptcha_secret."&response=".$_POST['g-recaptcha-response']);
             $response = json_decode($response, true);
-            if($response->success == true)
+            if($response["success"] == true)
             {
                 return;
             }
